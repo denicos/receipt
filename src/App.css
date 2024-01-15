@@ -34,7 +34,22 @@
 }
 
 .card {
-  padding: 2em;
+  padding: 1rem;
+ width: 100%;
+  border: 1px solid gray;
+  border-left: 2px dotted rgb(151, 126, 126);
+  border-radius: 5px;
+box-shadow: #b2b2b2;
+background-color: #f5f7f9;
+}
+.container{
+  display: flex;
+  flex-direction: row;
+}
+.empty{
+  border: 1px solid grey;
+  background-color: rgb(25, 97, 169);
+  padding: 20px
 }
 
 .read-the-docs {
