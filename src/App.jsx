@@ -37,7 +37,7 @@ function App() {
   };
 
   const generatePDF = () => {
-    const content = document.getElementById('card');
+    const content = document.getElementById('receipt');
     const options = {
       margin: 5,
       filename: 'receipt.pdf',
@@ -51,70 +51,55 @@ function App() {
 
   return (
     <>
-      <Container maxW='lg'>
-        <Card >
-          <CardHeader bg='#1850bc' color='white' p={25} borderTopRightRadius={10} borderTopLeftRadius={10}>
-            <Flex dir='row' alignItems='center' justifyContent='space-between' pb={5}>
-              <Box>
-                <Text textAlign='left'>
-                  Amount in
-                </Text>
-              </Box>
-              <Box>
-                <Text fontSize={14} fontWeight='bold'>
-                  Reference No. {referenceNumber}
-                </Text>
-              </Box>
+      <Container maxW='lg' id='receipt' >
+        <Card border='1px solid grey' borderRadius={5} >
 
-            </Flex>
-            <Flex dir='row' alignItems='center' justifyContent='space-between'>
-              <Box>
-                <Text fontSize={20} fontWeight='bold'>
-                  SGD
-                </Text>
-              </Box>
-              <Box>
-                <Text fontSize={20} fontWeight='bold'>
-                  58.00
-                </Text>
-              </Box>
+          <CardBody>
+            <Box alignItems='center' justifyContent='space-between' pb={5}>
 
-            </Flex>
+              <Heading as='h4' pt={5}>
+                Amount:  $15.00
+              </Heading>
+              <Text mt={5} pt={5} fontSize={12} color='grey'>
+                Date: Today 25 Dec
+              </Text>
 
-          </CardHeader>
+            </Box>
+          </CardBody>
+
+
           <CardBody textAlign='left'>
-            <Text>
-              From
+            <Text pt={5} fontSize={12} color='grey'>
+              Description
             </Text>
             <Text fontWeight='bold'>
-              POSB PassBook Savings Account
+              Incoming PayNow
             </Text>
             <Text pb={5}>
-              189-63487-0
+              Ref: {referenceNumber}
             </Text>
             <Divider />
             <Text pt={5}>
-              To
+              From:
             </Text>
             <Text fontWeight='bold'>
-              ANG JIN YI
+              ONG WEI XIANG KIERNAN OTHR
             </Text>
-            <Text>
-              Mobile: +6584696523
+            <Text pb={5}>
+              Transfer - Mobile
             </Text>
+            <Divider />
+            <Text pt={5} fontSize={12} color='grey'>
+              Transfer Type
+            </Text>
+            <Text fontWeight='bold'>
+              FAST / PAYNow Transfer
+            </Text>
+
+
           </CardBody>
 
-          <Flex dir='row' alignItems='center' placeContent='space-between' p={5}>
-            <Box>
-              <Text fontSize={15}>
-                Time elapsed since copy: {elapsedTime}
-              </Text>
-            </Box>
-            <Box alignSelf='right'>
-              <Button variant='outline' onClick={handleCopyReceipt}>Copy</Button>
-            </Box>
 
-          </Flex>
 
         </Card>
 
@@ -122,30 +107,21 @@ function App() {
 
 
       </Container>
+      <Container maxW='lg'>
+        <Flex dir='row' alignItems='center' placeContent='space-between' p={5}>
+          <Box>
+            <Text fontSize={15}>
+              Time elapsed since copy: {elapsedTime}
+            </Text>
+          </Box>
+          <Box alignSelf='right'>
+            <Button variant='outline' onClick={handleCopyReceipt}>Copy</Button>
+          </Box>
 
-      <div className='container'>
+        </Flex>
+      </Container>
 
-        <div className="card" id='card'>
-
-          <p>Reference Number: {referenceNumber}</p>
-          <h1>$75.00</h1>
-          <p>Paid 15 Jan, 2024</p>
-
-          <hr />
-          <div>
-
-          </div>
-
-
-
-
-        </div>
-
-
-      </div>
-      {elapsedTime && <p>Time elapsed since copy: {elapsedTime}</p>}
-      <button style={{ color: 'white', background: 'rgb(25, 97, 169)' }} onClick={handleCopyReceipt}>Copy Receipt</button>
-
+     
     </>
   );
 };
