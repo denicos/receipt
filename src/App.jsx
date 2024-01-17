@@ -41,9 +41,9 @@ function App() {
     const options = {
       margin: 5,
       filename: 'receipt.pdf',
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: 'mm', format: 'a5', orientation: 'portrait' },
+      image: { type: 'jpeg', quality: 0.98},
+      html2canvas: { scale: 1 },
+      jsPDF: { unit: 'mm', format: 'a6', orientation: 'portrait' },
     };
 
     html2pdf().from(content).set(options).save();
