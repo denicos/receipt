@@ -1,39 +1,83 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+import html2pdf from 'html2pdf.js';
 
 
+const generateReferenceNumber = () => {
+  const timestamp = new Date().getTime();
+  const randomNum = Math.floor(Math.random() * 10000);
+  return `${timestamp}-${randomNum}`;
+};
 
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [referenceNumber, setReferenceNumber] = useState(null);
+  const [elapsedTime, setElapsedTime] = useState(null);
+  
+  const handleCopyReceipt = () => {
+    const newReferenceNumber = generateReferenceNumber();
+    setReferenceNumber(newReferenceNumber);
+    //working on time display.
+    const copyTime = new Date();
+    setInterval(() => {
+      const elapsedMilliseconds = new Date() - copyTime;
+      setElapsedTime(formatElapsedTime(elapsedMilliseconds));
+    }, 1000);
 
-  return (
-    <>
+    generatePDF();
+  };
 
-      <h1>Copy your Recipt</h1>
-      <div className='container'>
-        <div className='empty'>
+  const formatElapsedTime = (milliseconds) => {
+    const seconds = Math.floor((milliseconds / 1000) % 60);
+    const minutes = Math.floor((milliseconds / (1000 * 60)) % 60);
+    const hours = Math.floor((milliseconds / (1000 * 60 * 60)) % 24);
 
-        </div>
+    return `${hours}h ${minutes}m ${seconds}s`;
+  };
 
-        <div className="card">
+   const generatePDF = () => {
+    const content = document.getElementById('card');
+     const options = {
+      margin: 5,
+      filename: 'receipt.pdf',
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'mm', format: 'a5', orientation: 'portrait' },
+    };
 
-          <p>Recipt No. #Rf387rr1</p>
-          <h1>$75.00</h1>
-          <p>Paid 15 Jan, 2024</p>
+    html2pdf().from(content).set(options).save();
+  };
+ 
+return (
+  <>
 
-          <hr />
-          <div>
+    <h1>Copy your Recipt</h1>
+    <div className='container'>
+      
+
+      <div className="card" id='card'>
+
+        <p>Reference Number: {referenceNumber}</p>
+        <h1>$75.00</h1>
+        <p>Paid 15 Jan, 2024</p>
+
+        <hr />
+        <div>
             
-          </div>
-          <button style={{ color: 'white', background: 'rgb(25, 97, 169)'}}>Copy</button>
         </div>
+       
+          
+       
+          
       </div>
 
-    </>
-  )
-}
+      
+    </div>
+    {elapsedTime && <p>Time elapsed since copy: {elapsedTime}</p>}
+     <button style={{ color: 'white', background: 'rgb(25, 97, 169)' }} onClick={handleCopyReceipt}>Copy Receipt</button>
+
+  </>
+);
+ };
 
 export default App
