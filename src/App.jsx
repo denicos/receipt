@@ -108,7 +108,7 @@ function App() {
               </Text>
             </Box>
             <Box alignSelf='right'  >
-              <Button variant='outline' bg='#26A9E0' p={5} size={'lg'} w={'sm'} onClick={handleCopyReceipt}>Copy</Button>
+              <Button variant='outline' bg='#26A9E0' p={5} size={'lg'} w={'100%'} onClick={handleCopyReceipt}>Copy</Button>
             </Box>
 
 
@@ -161,7 +161,7 @@ function App() {
               </Text>
             </Box>
             <Box alignSelf='right'  >
-              <Button variant='outline' bg='#26A9E0' size={'lg'} w={'sm'} onClick={handleCopyReceipt}>Copy</Button>
+              <Button variant='outline' bg='#26A9E0' size={'lg'} w={'100%'} onClick={handleCopyReceipt}>Copy</Button>
             </Box>
           </Container>
         </Box>
@@ -221,7 +221,7 @@ function App() {
                 </Text>
               </Box>
               <Box alignSelf='right'  >
-                <Button variant='outline' bg='#26A9E0' size={'lg'} w={'sm'} onClick={handleCopyReceipt}>Copy</Button>
+                <Button variant='outline' bg='#26A9E0' size={'lg'} w={'100%'} onClick={handleCopyReceipt}>Copy</Button>
               </Box>
             </Container>
           </Box>
@@ -294,7 +294,7 @@ function App() {
               </Text>
             </Box>
             <Box alignSelf='right'  >
-              <Button variant='outline' bg='#26A9E0' size={'lg'} w={'sm'} onClick={handleCopyReceipt}>Copy</Button>
+              <Button variant='outline' bg='#26A9E0' size={'lg'} w={'100%'} onClick={handleCopyReceipt}>Copy</Button>
             </Box>
           </Container>
         </Box>
@@ -352,7 +352,7 @@ function App() {
               </Text>
             </Box>
             <Box alignSelf='right'  >
-              <Button variant='outline' bg='#26A9E0' size={'lg'} w={'sm'} onClick={handleCopyReceipt}>Copy</Button>
+              <Button variant='outline' bg='#26A9E0' size={'lg'} w={'100%'} onClick={handleCopyReceipt}>Copy</Button>
             </Box>
           </Container>
         </Box>
