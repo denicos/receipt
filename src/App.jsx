@@ -108,7 +108,7 @@ function App() {
               </Text>
             </Box>
             <Box alignSelf='right'  >
-              <Button variant='outline' bg='#26A9E0' p={5} size={'lg'} w={'100%'} onClick={handleCopyReceipt}>Copy</Button>
+              <Button variant='outline' bg='#26A9E0' p={5} size={'lg'} w={'100%'} onClick={handleCopyReceipt}>Share</Button>
             </Box>
 
 
@@ -131,22 +131,22 @@ function App() {
               <Text color='#c00' fontSize='20px' pt={8} pb={8}>Transfer Alert</Text>
               <Text>Dear sir/ madam,</Text>
               <Text pt={5} pb={3} fontSize={14} color='grey'>
-               
+
               </Text>
               <Text fontWeight='normal'>
-               You have received SGD 15.00 on 25 Dec 12:34 (SGT) from ONG WEIXIANG KIERNAN to your account via PayNow
+                You have received SGD 15.00 on 25 Dec 12:34 (SGT) from ONG WEIXIANG KIERNAN to your account via PayNow
               </Text>
 
 
               <Text pt={5} pb={2} fontSize={14} color='grey'>
-               
+
               </Text>
               <Text fontWeight='normal' pb={5}>
                 Thank you for banking with us.
               </Text>
 
               <Text fontWeight='normal' pb={5}>
-                Yours faithfully <br/>
+                Yours faithfully <br />
                 DBS Bank Ltd
               </Text>
 
@@ -161,7 +161,7 @@ function App() {
               </Text>
             </Box>
             <Box alignSelf='right'  >
-              <Button variant='outline' bg='#26A9E0' size={'lg'} w={'100%'} onClick={handleCopyReceipt}>Copy</Button>
+              <Button variant='outline' bg='#26A9E0' size={'lg'} w={'100%'} onClick={handleCopyReceipt}>Share</Button>
             </Box>
           </Container>
         </Box>
@@ -199,7 +199,7 @@ function App() {
                   Description
                 </Text>
                 <Text fontWeight='normal'>
-                  ICTIncoming PayNow Ref From: LAU CHUN KIT OTHR PayNow Transfer 
+                  ICTIncoming PayNow Ref From: LAU CHUN KIT OTHR PayNow Transfer
                 </Text>
 
 
@@ -221,7 +221,7 @@ function App() {
                 </Text>
               </Box>
               <Box alignSelf='right'  >
-                <Button variant='outline' bg='#26A9E0' size={'lg'} w={'100%'} onClick={handleCopyReceipt}>Copy</Button>
+                <Button variant='outline' bg='#26A9E0' size={'lg'} w={'100%'} onClick={handleCopyReceipt}>Share</Button>
               </Box>
             </Container>
           </Box>
@@ -230,60 +230,65 @@ function App() {
         <Box>
 
 
-          <Box maxW='sm' id='receipt'  p={5}>
+          <Box maxW='sm' id='receipt'>
             <Box >
-           
 
-              <Box bg='#099157' borderTopLeftRadius={5} borderTopRightRadius={5} borderBottom={'2px solid yellow'} color='white' pb={3}>
+
+              <Box bg='#099157' borderTopLeftRadius={5} borderTopRightRadius={5} borderBottom={'2px solid #ffdf00'} color='white' pb={3}>
                 <Box mr={5}>
-                <Text p={1} pt={5} textAlign='left' fontSize={14}>
-                    Transfer To <strong>CHONG SEI KAI</strong> 
-                </Text>
-                <Text p={1} textAlign='left' fontSize={14}>
-                  +6598740165
-                </Text>
-                <Text p={1} textAlign='left' fontSize={14}>
-                  SGD 38.00
+                  <Text p={1} pt={5} textAlign='left' fontSize={14}>
+                    Transfer To <strong>CHONG SEI KAI</strong>
+                  </Text>
+                  <Text p={1} textAlign='left' fontSize={14}>
+                    +6598740165
+                  </Text>
+                  <Text p={1} textAlign='left' fontSize={14}>
+                    SGD 38.00
                   </Text>
                 </Box>
 
               </Box>
-             
+
             </Box>
 
-            <Box textAlign='left' bg='white' p={5} boxShadow='var(--chakra-shadows-md)' borderRadius={3}>
+            <Box textAlign='left' bg='white' p={5}  borderRadius={3}>
               <Text fontWeight='normal'>
                 Service Fee
               </Text>
-              <Text pt={5} pb={3} fontSize={14} color='grey'>
+              <Text  pb={3} fontSize={14} color='grey'>
                 SGD 0.00
               </Text>
               <Text fontWeight='normal'>
                 Purpose of Transfer
               </Text>
-              <Text pt={5} pb={3} fontSize={14} color='grey'>
-               Others
+              <Text pb={3} fontSize={14} color='grey'>
+                Others
               </Text>
-            
+
               <Text fontWeight='normal'>
-            Remarks
+                Remarks
               </Text>
-              <Text pt={5} pb={3} fontSize={14} color='grey'>
+              <Text pb={3} fontSize={14} color='grey'>
                 Transfer via PayNow
               </Text>
               <Text fontWeight='normal'>
                 Effective Date
               </Text>
-              <Text pt={5} pb={3} fontSize={14} color='grey'>
+              <Text pb={3} fontSize={14} color='grey'>
                 Today December 2023
               </Text>
               <Text fontWeight='normal'>
-               Reference ID
+                Reference ID
               </Text>
               <Text pt={5} pb={3} fontSize={14} color='grey'>
-               {referenceNumber}
+                {referenceNumber}
               </Text>
 
+            </Box>
+            <Box bg={'#ffdf00'}>
+              <Text fontWeight='normal'  p={10} textAlign='left'>
+               Transaction Successful! To check on status of your transaction, please go to <strong>View Status</strong>
+              </Text>
             </Box>
           </Box>
           <Container maxW='sm'>
@@ -294,7 +299,7 @@ function App() {
               </Text>
             </Box>
             <Box alignSelf='right'  >
-              <Button variant='outline' bg='#26A9E0' size={'lg'} w={'100%'} onClick={handleCopyReceipt}>Copy</Button>
+              <Button variant='outline' bg='#26A9E0' size={'lg'} w={'100%'} onClick={handleCopyReceipt}>Share</Button>
             </Box>
           </Container>
         </Box>
@@ -352,7 +357,7 @@ function App() {
               </Text>
             </Box>
             <Box alignSelf='right'  >
-              <Button variant='outline' bg='#26A9E0' size={'lg'} w={'100%'} onClick={handleCopyReceipt}>Copy</Button>
+              <Button variant='outline' bg='#26A9E0' size={'lg'} w={'100%'} onClick={handleCopyReceipt}>Share</Button>
             </Box>
           </Container>
         </Box>
