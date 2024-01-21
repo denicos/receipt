@@ -1,7 +1,12 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
 import html2pdf from 'html2pdf.js';
-import { Heading, Container, Center, Card, Box, Text, CardHeader, Flex, CardBody, CardFooter, Button, Divider } from '@chakra-ui/react';
+import { ClipboardItem } from 'clipboard-polyfill';
+import html2canvas from 'html2canvas';
+import {
+  Container, Grid,
+  Box, Text, Flex, CardBody, Image, CardFooter, Button, Divider
+} from '@chakra-ui/react';
 
 
 const generateReferenceNumber = () => {
@@ -14,19 +19,48 @@ const generateReferenceNumber = () => {
 function App() {
   const [referenceNumber, setReferenceNumber] = useState(null);
   const [elapsedTime, setElapsedTime] = useState(null);
+  const [intervalId, setIntervalId] = useState(null);
+  const [imageData, setImageData] = useState(null);
 
-  const handleCopyReceipt = () => {
+  useEffect(() => {
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [intervalId]);
+
+  const generateImage = async () => {
     const newReferenceNumber = generateReferenceNumber();
     setReferenceNumber(newReferenceNumber);
-    //working on time display.
+
     const copyTime = new Date();
-    setInterval(() => {
+    const intervalId = setInterval(() => {
       const elapsedMilliseconds = new Date() - copyTime;
       setElapsedTime(formatElapsedTime(elapsedMilliseconds));
     }, 1000);
 
-    generatePDF();
+    try {
+      const content = document.getElementById('receipt');
+      const canvas = await html2canvas(content);
+      const image = canvas.toDataURL('image/png');
+      const blob = await fetch(image).then((res) => res.blob());
+
+      if (navigator.clipboard && navigator.clipboard.write) {
+        await navigator.clipboard.write([
+          new ClipboardItem({
+            'image/png': blob,
+          }),
+        ]);
+      } else {
+        throw new Error("Clipboard write is not supported in this environment");
+      }
+    } catch (error) {
+      console.error('Error generating image:', error);
+    } finally {
+      clearInterval(intervalId);
+      setElapsedTime(null);
+    }
   };
+
 
   const formatElapsedTime = (milliseconds) => {
     const seconds = Math.floor((milliseconds / 1000) % 60);
@@ -36,22 +70,11 @@ function App() {
     return `${hours}h ${minutes}m ${seconds}s`;
   };
 
-  const generatePDF = () => {
-    const content = document.getElementById('rec');
-    const options = {
-      margin: 1,
-      filename: 'receipt.pdf',
-      image: { type: 'jpeg', quality: 0.98},
-      html2canvas: { scale: 1 },
-      jsPDF: { unit: 'mm', format: 'a6', orientation: 'portrait' },
-    };
 
-    html2pdf().from(content).set(options).save();
-  };
 
   return (
     <>
-      <Container maxW='lg' id='rec'>
+      <Container maxW='lg'>
         <Card >
           <CardHeader bg='#1850bc' color='white' p={25} borderTopRightRadius={10} borderTopLeftRadius={10}>
             <Flex dir='row' alignItems='center' justifyContent='space-between' pb={5}>
@@ -60,91 +83,175 @@ function App() {
                   Amount in
                 </Text>
               </Box>
+
+              <Box textAlign='left' bg='white' p={5} boxShadow='var(--chakra-shadows-md)' borderRadius={3}>
+                <Text pt={5} pb={3} fontSize={14} color='grey'>
+                  Description
+                </Text>
+                <Text fontWeight='normal'>
+                  ICTIncoming PayNow Ref From: LAU CHUN KIT OTHR PayNow Transfer
+                </Text>
+
+
+                <Text pt={5} pb={2} fontSize={14} color='grey'>
+                  Transfer Type
+                </Text>
+                <Text fontWeight='normal' pb={2}>
+                  Advice
+                </Text>
+
+
+              </Box>
+            </Box>
+            <Container maxW='sm'>
+
               <Box>
-                <Text fontSize={14} fontWeight='bold'>
-                  Reference No. {referenceNumber}
+                <Text fontSize={15} mt={5} p={5}>
+                  Time elapsed since copy:
                 </Text>
               </Box>
-
-            </Flex>
-            <Flex dir='row' alignItems='center' justifyContent='space-between'>
-              <Box>
-                <Text fontSize={20} fontWeight='bold'>
-                  SGD
-                </Text>
+              <Box alignSelf='right'  >
+                <Button variant='outline' bg='#26A9E0' size={'lg'} w={'100%'} onClick={generateImage}>Share</Button>
               </Box>
-              <Box>
-                <Text fontSize={20} fontWeight='bold'>
-                  58.00
-                </Text>
+            </Container>
+          </Box>
+        </Box>
+
+        <Box>
+
+
+          <Box maxW='sm' >
+            <Box >
+
+
+              <Box bg='#099157' borderTopLeftRadius={5} borderTopRightRadius={5} borderBottom={'2px solid #ffdf00'} color='white' pb={3}>
+                <Box mr={5}>
+                  <Text p={1} pt={5} textAlign='left' fontSize={14}>
+                    Transfer To <strong>CHONG SEI KAI</strong>
+                  </Text>
+                  <Text p={1} textAlign='left' fontSize={14}>
+                    +6598740165
+                  </Text>
+                  <Text p={1} textAlign='left' fontSize={14}>
+                    SGD 38.00
+                  </Text>
+                </Box>
+
               </Box>
 
-            </Flex>
+            </Box>
 
-          </CardHeader>
-          <CardBody textAlign='left'>
-            <Text>
-              From
-            </Text>
-            <Text fontWeight='bold'>
-              POSB PassBook Savings Account
-            </Text>
-            <Text pb={5}>
-              189-63487-0
-            </Text>
-            <Divider />
-            <Text pt={5}>
-              To
-            </Text>
-            <Text fontWeight='bold'>
-              ANG JIN YI
-            </Text>
-            <Text>
-              Mobile: +6584696523
-            </Text>
-          </CardBody>
+            <Box textAlign='left' bg='white' p={5} borderRadius={3}>
+              <Text fontWeight='normal'>
+                Service Fee
+              </Text>
+              <Text pb={3} fontSize={14} color='grey'>
+                SGD 0.00
+              </Text>
+              <Text fontWeight='normal'>
+                Purpose of Transfer
+              </Text>
+              <Text pb={3} fontSize={14} color='grey'>
+                Others
+              </Text>
 
-          <Flex dir='row' alignItems='center' placeContent='space-between' p={5}>
-            <Box>
-              <Text fontSize={15}>
-                Time elapsed since copy: {elapsedTime}
+              <Text fontWeight='normal'>
+                Remarks
+              </Text>
+              <Text pb={3} fontSize={14} color='grey'>
+                Transfer via PayNow
+              </Text>
+              <Text fontWeight='normal'>
+                Effective Date
+              </Text>
+              <Text pb={3} fontSize={14} color='grey'>
+                Today December 2023
+              </Text>
+              <Text fontWeight='normal'>
+                Reference ID
+              </Text>
+              <Text pt={5} pb={3} fontSize={14} color='grey'>
+                {referenceNumber}
+              </Text>
+
+            </Box>
+            <Box bg={'#ffdf00'}>
+              <Text fontWeight='normal' p={10} textAlign='left'>
+                Transaction Successful! To check on status of your transaction, please go to <strong>View Status</strong>
               </Text>
             </Box>
-            <Box alignSelf='right'>
-              <Button variant='outline' onClick={handleCopyReceipt}>Copy</Button>
+          </Box>
+          <Container maxW='sm'>
+
+            <Box>
+              <Text fontSize={15} mt={5} p={5}>
+                Time elapsed since copy:
+              </Text>
+            </Box>
+            <Box alignSelf='right'  >
+              <Button variant='outline' bg='#26A9E0' size={'lg'} w={'100%'} onClick={generateImage}>Share</Button>
+            </Box>
+          </Container>
+        </Box>
+
+
+        <Box>
+
+
+          <Box maxW='sm' bg='#f2f2f2' p={5}>
+            <Box >
+              <Text fontSize={50} textAlign='center'>💵</Text>
+
+              <Flex dir='row' alignItems='center' pb={3} justifyContent='center'>
+
+                <Box as='h4'>
+                  <Text>  <span style={{ paddingRight: '5px' }}>SGD</span>
+                    <strong style={{ fontSize: '50px', color: 'green' }}>
+                      15</strong>
+                    <strong style={{ color: 'green', fontSize: '24px' }}>.00</strong>
+                  </Text>
+
+                </Box>
+
+
+              </Flex>
+              <Text pt={3} pb={3} fontSize={14} color='grey' textAlign='center'>
+                Today 25 Dec
+              </Text>
             </Box>
 
-          </Flex>
-
-        </Card>
-
-
-
-
-      </Container>
-
-      <div className='container'>
-
-        <div className="card" id='card'>
-
-          <p>Reference Number: {referenceNumber}</p>
-          <h1>$75.00</h1>
-          <p>Paid 15 Jan, 2024</p>
-
-          <hr />
-          <div>
-
-          </div>
+            <Box textAlign='left' bg='white' p={5} boxShadow='var(--chakra-shadows-md)' borderRadius={3}>
+              <Text pt={5} pb={3} fontSize={14} color='grey'>
+                Description
+              </Text>
+              <Text fontWeight='normal'>
+                Incoming PayNow Ref From: ONG WEI XIANG KIERNAN OTHR Tranfer - Mobile
+              </Text>
 
 
+              <Text pt={5} pb={2} fontSize={14} color='grey'>
+                Transfer Type
+              </Text>
+              <Text fontWeight='normal' pb={2}>
+                FAST / PAYNow Transfer
+              </Text>
 
 
-        </div>
+            </Box>
+          </Box>
+          <Container maxW='sm'>
 
-
-      </div>
-      {elapsedTime && <p>Time elapsed since copy: {elapsedTime}</p>}
-      <button style={{ color: 'white', background: 'rgb(25, 97, 169)' }} onClick={handleCopyReceipt}>Copy Receipt</button>
+            <Box>
+              <Text fontSize={15} mt={5} p={5}>
+                Time elapsed since copy:
+              </Text>
+            </Box>
+            <Box alignSelf='right'  >
+              <Button variant='outline' bg='#26A9E0' size={'lg'} w={'100%'} onClick={generateImage}>Share</Button>
+            </Box>
+          </Container>
+        </Box>
+      </Grid>
 
     </>
   );
