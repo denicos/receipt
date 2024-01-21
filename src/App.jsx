@@ -37,9 +37,9 @@ function App() {
   };
 
   const generatePDF = () => {
-    const content = document.getElementById('card');
+    const content = document.getElementById('rec');
     const options = {
-      margin: 5,
+      margin: 1,
       filename: 'receipt.pdf',
       image: { type: 'jpeg', quality: 0.98},
       html2canvas: { scale: 1 },
@@ -51,7 +51,7 @@ function App() {
 
   return (
     <>
-      <Container maxW='lg'>
+      <Container maxW='lg' id='rec'>
         <Card >
           <CardHeader bg='#1850bc' color='white' p={25} borderTopRightRadius={10} borderTopLeftRadius={10}>
             <Flex dir='row' alignItems='center' justifyContent='space-between' pb={5}>
