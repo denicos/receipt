@@ -1,6 +1,8 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
 import html2pdf from 'html2pdf.js';
+import { ClipboardItem } from 'clipboard-polyfill';
+import html2canvas from 'html2canvas';
 import {
   Container, Grid,
   Box, Text, Flex, CardBody, Image, CardFooter, Button, Divider
@@ -17,19 +19,48 @@ const generateReferenceNumber = () => {
 function App() {
   const [referenceNumber, setReferenceNumber] = useState(null);
   const [elapsedTime, setElapsedTime] = useState(null);
+  const [intervalId, setIntervalId] = useState(null);
+  const [imageData, setImageData] = useState(null);
 
-  const handleCopyReceipt = () => {
+  useEffect(() => {
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [intervalId]);
+
+  const generateImage = async () => {
     const newReferenceNumber = generateReferenceNumber();
     setReferenceNumber(newReferenceNumber);
-    //working on time display.
+
     const copyTime = new Date();
-    setInterval(() => {
+    const intervalId = setInterval(() => {
       const elapsedMilliseconds = new Date() - copyTime;
       setElapsedTime(formatElapsedTime(elapsedMilliseconds));
     }, 1000);
 
-    generatePDF();
+    try {
+      const content = document.getElementById('receipt');
+      const canvas = await html2canvas(content);
+      const image = canvas.toDataURL('image/png');
+      const blob = await fetch(image).then((res) => res.blob());
+
+      if (navigator.clipboard && navigator.clipboard.write) {
+        await navigator.clipboard.write([
+          new ClipboardItem({
+            'image/png': blob,
+          }),
+        ]);
+      } else {
+        throw new Error("Clipboard write is not supported in this environment");
+      }
+    } catch (error) {
+      console.error('Error generating image:', error);
+    } finally {
+      clearInterval(intervalId);
+      setElapsedTime(null);
+    }
   };
+
 
   const formatElapsedTime = (milliseconds) => {
     const seconds = Math.floor((milliseconds / 1000) % 60);
@@ -39,18 +70,7 @@ function App() {
     return `${hours}h ${minutes}m ${seconds}s`;
   };
 
-  const generatePDF = () => {
-    const content = document.getElementById('receipt');
-    const options = {
-      margin: 5,
-      filename: 'receipt.pdf',
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: 'mm', format: 'a6', orientation: 'portrait' },
-    };
 
-    html2pdf().from(content).set(options).save();
-  };
 
   return (
     <>
@@ -108,7 +128,7 @@ function App() {
               </Text>
             </Box>
             <Box alignSelf='right'  >
-              <Button variant='outline' bg='#26A9E0' p={5} size={'lg'} w={'100%'} onClick={handleCopyReceipt}>Share</Button>
+              <Button variant='outline' bg='#26A9E0' p={5} size={'lg'} w={'100%'} onClick={generateImage}>Share</Button>
             </Box>
 
 
@@ -161,7 +181,7 @@ function App() {
               </Text>
             </Box>
             <Box alignSelf='right'  >
-              <Button variant='outline' bg='#26A9E0' size={'lg'} w={'100%'} onClick={handleCopyReceipt}>Share</Button>
+              <Button variant='outline' bg='#26A9E0' size={'lg'} w={'100%'} onClick={generateImage}>Share</Button>
             </Box>
           </Container>
         </Box>
@@ -221,7 +241,7 @@ function App() {
                 </Text>
               </Box>
               <Box alignSelf='right'  >
-                <Button variant='outline' bg='#26A9E0' size={'lg'} w={'100%'} onClick={handleCopyReceipt}>Share</Button>
+                <Button variant='outline' bg='#26A9E0' size={'lg'} w={'100%'} onClick={generateImage}>Share</Button>
               </Box>
             </Container>
           </Box>
@@ -251,11 +271,11 @@ function App() {
 
             </Box>
 
-            <Box textAlign='left' bg='white' p={5}  borderRadius={3}>
+            <Box textAlign='left' bg='white' p={5} borderRadius={3}>
               <Text fontWeight='normal'>
                 Service Fee
               </Text>
-              <Text  pb={3} fontSize={14} color='grey'>
+              <Text pb={3} fontSize={14} color='grey'>
                 SGD 0.00
               </Text>
               <Text fontWeight='normal'>
@@ -286,8 +306,8 @@ function App() {
 
             </Box>
             <Box bg={'#ffdf00'}>
-              <Text fontWeight='normal'  p={10} textAlign='left'>
-               Transaction Successful! To check on status of your transaction, please go to <strong>View Status</strong>
+              <Text fontWeight='normal' p={10} textAlign='left'>
+                Transaction Successful! To check on status of your transaction, please go to <strong>View Status</strong>
               </Text>
             </Box>
           </Box>
@@ -299,7 +319,7 @@ function App() {
               </Text>
             </Box>
             <Box alignSelf='right'  >
-              <Button variant='outline' bg='#26A9E0' size={'lg'} w={'100%'} onClick={handleCopyReceipt}>Share</Button>
+              <Button variant='outline' bg='#26A9E0' size={'lg'} w={'100%'} onClick={generateImage}>Share</Button>
             </Box>
           </Container>
         </Box>
@@ -357,7 +377,7 @@ function App() {
               </Text>
             </Box>
             <Box alignSelf='right'  >
-              <Button variant='outline' bg='#26A9E0' size={'lg'} w={'100%'} onClick={handleCopyReceipt}>Share</Button>
+              <Button variant='outline' bg='#26A9E0' size={'lg'} w={'100%'} onClick={generateImage}>Share</Button>
             </Box>
           </Container>
         </Box>
