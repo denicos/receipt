@@ -38,26 +38,33 @@ function App() {
       setElapsedTime(formatElapsedTime(elapsedMilliseconds));
     }, 1000);
 
-    try {
-      const content = document.getElementById('receipt');
-      const canvas = await html2canvas(content);
-      const image = canvas.toDataURL('image/png');
-      const blob = await fetch(image).then((res) => res.blob());
+    const element = document.getElementById('receipt')
 
+    try {
+      const canvas = await html2canvas(element);
+      const imageBlob = await new Promise((resolve) => canvas.toBlob(resolve));
+
+      // Use Clipboard API if available
       if (navigator.clipboard && navigator.clipboard.write) {
         await navigator.clipboard.write([
           new ClipboardItem({
-            'image/png': blob,
+            'image/png': imageBlob,
           }),
         ]);
       } else {
-        throw new Error("Clipboard write is not supported in this environment");
+        // Fallback for browsers that don't support Clipboard API
+        const dataUrl = canvas.toDataURL('image/png');
+        const tempInput = document.createElement('input');
+        tempInput.value = dataUrl;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand('copy');
+        document.body.removeChild(tempInput);
       }
     } catch (error) {
-      console.error('Error generating image:', error);
+      console.error(error);
     } finally {
       clearInterval(intervalId);
-      setElapsedTime(null);
     }
   };
 
@@ -141,7 +148,7 @@ function App() {
         <Box>
 
 
-          <Box maxW='sm'  bg='#f2f2f2' p={5}>
+          <Box maxW='sm' bg='#f2f2f2' p={5}>
 
 
 
@@ -192,7 +199,7 @@ function App() {
           <Box>
 
 
-            <Box maxW='sm'  bg='#f2f2f2' p={5}>
+            <Box maxW='sm' bg='#f2f2f2' p={5}>
               <Box >
                 <Text fontSize={50} textAlign='center'>💵</Text>
 
