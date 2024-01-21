@@ -141,7 +141,7 @@ function App() {
         <Box>
 
 
-          <Box maxW='sm' id='receipt' bg='#f2f2f2' p={5}>
+          <Box maxW='sm'  bg='#f2f2f2' p={5}>
 
 
 
@@ -192,7 +192,7 @@ function App() {
           <Box>
 
 
-            <Box maxW='sm' id='receipt' bg='#f2f2f2' p={5}>
+            <Box maxW='sm'  bg='#f2f2f2' p={5}>
               <Box >
                 <Text fontSize={50} textAlign='center'>💵</Text>
 
@@ -250,7 +250,7 @@ function App() {
         <Box>
 
 
-          <Box maxW='sm' id='receipt'>
+          <Box maxW='sm' >
             <Box >
 
 
@@ -328,7 +328,7 @@ function App() {
         <Box>
 
 
-          <Box maxW='sm' id='receipt' bg='#f2f2f2' p={5}>
+          <Box maxW='sm' bg='#f2f2f2' p={5}>
             <Box >
               <Text fontSize={50} textAlign='center'>💵</Text>
 
