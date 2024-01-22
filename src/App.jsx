@@ -38,26 +38,33 @@ function App() {
       setElapsedTime(formatElapsedTime(elapsedMilliseconds));
     }, 1000);
 
-    try {
-      const content = document.getElementById('receipt');
-      const canvas = await html2canvas(content);
-      const image = canvas.toDataURL('image/png');
-      const blob = await fetch(image).then((res) => res.blob());
+    const element = document.getElementById('receipt')
 
+    try {
+      const canvas = await html2canvas(element);
+      const imageBlob = await new Promise((resolve) => canvas.toBlob(resolve));
+
+      // Use Clipboard API if available
       if (navigator.clipboard && navigator.clipboard.write) {
         await navigator.clipboard.write([
           new ClipboardItem({
-            'image/png': blob,
+            'image/png': imageBlob,
           }),
         ]);
       } else {
-        throw new Error("Clipboard write is not supported in this environment");
+        // Fallback for browsers that don't support Clipboard API
+        const dataUrl = canvas.toDataURL('image/png');
+        const tempInput = document.createElement('input');
+        tempInput.value = dataUrl;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand('copy');
+        document.body.removeChild(tempInput);
       }
     } catch (error) {
-      console.error('Error generating image:', error);
+      console.error(error);
     } finally {
       clearInterval(intervalId);
-      setElapsedTime(null);
     }
   };
 
@@ -74,13 +81,143 @@ function App() {
 
   return (
     <>
-      <Container maxW='lg'>
-        <Card >
-          <CardHeader bg='#1850bc' color='white' p={25} borderTopRightRadius={10} borderTopLeftRadius={10}>
-            <Flex dir='row' alignItems='center' justifyContent='space-between' pb={5}>
-              <Box>
-                <Text textAlign='left'>
-                  Amount in
+      <Grid templateColumns="repeat(auto-fill, minmax(300px, 1fr))" gap={8}>
+
+        <Box>
+
+
+          <Box maxW='sm' id='receipt' bg='#f2f2f2' p={5}>
+            <Box >
+              <Text fontSize={50} textAlign='center'>💵</Text>
+
+              <Flex dir='row' alignItems='center' pb={3} justifyContent='center'>
+
+                <Box as='h4'>
+                  <Text>  <span style={{ paddingRight: '5px' }}>SGD</span>
+                    <strong style={{ fontSize: '50px', color: 'green' }}>
+                      15</strong>
+                    <strong style={{ color: 'green', fontSize: '24px' }}>.00</strong>
+                  </Text>
+
+                </Box>
+
+
+              </Flex>
+              <Text pt={3} pb={3} fontSize={14} color='grey' textAlign='center'>
+                Today 25 Dec
+              </Text>
+            </Box>
+
+            <Box textAlign='left' bg='white' p={5} boxShadow='var(--chakra-shadows-md)' borderRadius={3}>
+              <Text pt={5} pb={3} fontSize={14} color='grey'>
+                Description
+              </Text>
+              <Text fontWeight='normal'>
+                Incoming PayNow Ref {referenceNumber} From: ONG WEI XIANG KIERNAN OTHR Tranfer - Mobile
+              </Text>
+
+
+              <Text pt={5} pb={2} fontSize={14} color='grey'>
+                Transfer Type
+              </Text>
+              <Text fontWeight='normal' pb={2}>
+                FAST / PAYNow Transfer
+              </Text>
+
+
+            </Box>
+          </Box>
+          <Container maxW='sm'>
+
+            <Box>
+              <Text fontSize={15} mt={5} p={5}>
+                Time elapsed since copy:
+              </Text>
+            </Box>
+            <Box alignSelf='right'  >
+              <Button variant='outline' bg='#26A9E0' p={5} size={'lg'} w={'100%'} onClick={generateImage}>Share</Button>
+            </Box>
+
+
+          </Container>
+
+        </Box>
+
+
+        {/* Another receipt */}
+        <Box>
+
+
+          <Box maxW='sm' bg='#f2f2f2' p={5}>
+
+
+
+            <Box textAlign='left' bg='white' p={5} boxShadow='var(--chakra-shadows-md)' borderRadius={3}>
+              <Image maxW={'50%'} src='./brand-left.png' alt='Bank logo' />
+
+              <Text color='#c00' fontSize='20px' pt={8} pb={8}>Transfer Alert</Text>
+              <Text>Dear sir/ madam,</Text>
+              <Text pt={5} pb={3} fontSize={14} color='grey'>
+
+              </Text>
+              <Text fontWeight='normal'>
+                You have received SGD 15.00 on 25 Dec 12:34 (SGT) from ONG WEIXIANG KIERNAN to your account via PayNow
+              </Text>
+
+
+              <Text pt={5} pb={2} fontSize={14} color='grey'>
+
+              </Text>
+              <Text fontWeight='normal' pb={5}>
+                Thank you for banking with us.
+              </Text>
+
+              <Text fontWeight='normal' pb={5}>
+                Yours faithfully <br />
+                DBS Bank Ltd
+              </Text>
+
+
+            </Box>
+          </Box>
+          <Container maxW='sm'>
+
+            <Box>
+              <Text fontSize={15} mt={5} p={5}>
+                Time elapsed since copy:
+              </Text>
+            </Box>
+            <Box alignSelf='right'  >
+              <Button variant='outline' bg='#26A9E0' size={'lg'} w={'100%'} onClick={generateImage}>Share</Button>
+            </Box>
+          </Container>
+        </Box>
+
+
+        {/* Another receipt */}
+        <Box>
+          <Box>
+
+
+            <Box maxW='sm' bg='#f2f2f2' p={5}>
+              <Box >
+                <Text fontSize={50} textAlign='center'>💵</Text>
+
+                <Flex dir='row' alignItems='center' pb={3} justifyContent='center'>
+
+                  <Box as='h4'>
+                    <Text>  <span style={{ paddingRight: '5px' }}>SGD</span>
+                      <strong style={{ fontSize: '50px', color: 'green' }}>
+                        15</strong>
+                      <strong style={{ color: 'green', fontSize: '24px' }}>.00</strong>
+                    </Text>
+
+                  </Box>
+
+
+                </Flex>
+                <Text pt={3} pb={3} fontSize={14} color='grey' textAlign='center'>
+                  Today 27 Dec
                 </Text>
               </Box>
 
