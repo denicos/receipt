@@ -5,7 +5,9 @@ import { ClipboardItem } from 'clipboard-polyfill';
 import html2canvas from 'html2canvas';
 import {
   Container, Grid,
-  Box, Text, Flex, CardBody, Image, CardFooter, Button, Divider
+  Box, Text, Flex,
+  CardBody, Image, CardFooter, Button, Divider,
+  Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, 
 } from '@chakra-ui/react';
 
 
@@ -20,7 +22,9 @@ function App() {
   const [referenceNumber, setReferenceNumber] = useState(null);
   const [elapsedTime, setElapsedTime] = useState(null);
   const [intervalId, setIntervalId] = useState(null);
-  const [imageData, setImageData] = useState(null);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [canvasImage, setCanvasImage] = useState(null);
 
   useEffect(() => {
     return () => {
@@ -38,36 +42,21 @@ function App() {
       setElapsedTime(formatElapsedTime(elapsedMilliseconds));
     }, 1000);
 
-    const element = document.getElementById('receipt')
+    const element = document.getElementById('receipt');
 
     try {
       const canvas = await html2canvas(element);
-      const imageBlob = await new Promise((resolve) => canvas.toBlob(resolve));
+      setCanvasImage(canvas.toDataURL('image/png'));
 
-      // Use Clipboard API if available
-      if (navigator.clipboard && navigator.clipboard.write) {
-        await navigator.clipboard.write([
-          new ClipboardItem({
-            'image/png': imageBlob,
-          }),
-        ]);
-      } else {
-        // Fallback for browsers that don't support Clipboard API
-        const dataUrl = canvas.toDataURL('image/png');
-        const tempInput = document.createElement('input');
-        tempInput.value = dataUrl;
-        document.body.appendChild(tempInput);
-        tempInput.select();
-        document.execCommand('copy');
-        document.body.removeChild(tempInput);
-      }
+      // Open modal with screenshot
+      setIsModalOpen(true);
     } catch (error) {
-      console.error(error);
+      console.error('Error generating image:', error);
     } finally {
       clearInterval(intervalId);
+      setElapsedTime(null);
     }
   };
-
 
   const formatElapsedTime = (milliseconds) => {
     const seconds = Math.floor((milliseconds / 1000) % 60);
@@ -77,7 +66,35 @@ function App() {
     return `${hours}h ${minutes}m ${seconds}s`;
   };
 
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
+  const copyImageToClipboard = async () => {
+    try {
+      const imageBlob = await fetch(canvasImage).then((res) => res.blob());
+      const imageFile = new File([imageBlob], 'receipt.png', { type: 'image/png' });
+
+      if (navigator.clipboard && navigator.clipboard.write) {
+        await navigator.clipboard.write([
+          new ClipboardItem({
+            [imageFile.type]: imageFile,
+          }),
+        ]);
+      } else {
+        const tempInput = document.createElement('input');
+        tempInput.value = canvasImage;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand('copy');
+        document.body.removeChild(tempInput);
+      }
+
+      closeModal();
+    } catch (error) {
+      console.error('Error copying image to clipboard:', error);
+    }
+  };
 
   return (
     <>
@@ -389,7 +406,19 @@ function App() {
           </Container>
         </Box>
       </Grid>
-
+      <Modal isOpen={isModalOpen} onClose={closeModal}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Receipt Copy</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Image src={canvasImage} alt="Receipt Screenshot" />
+            <Flex justifyContent="center" mt={4}>
+              <Button onClick={copyImageToClipboard}>Copy to Clipboard</Button>
+            </Flex>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </>
   );
 };
