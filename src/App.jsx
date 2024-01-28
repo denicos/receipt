@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react'
 import './App.css'
-import html2pdf from 'html2pdf.js';
+
 import { ClipboardItem } from 'clipboard-polyfill';
 import html2canvas from 'html2canvas';
+
+
 import {
   Container, Grid,
   Box, Text, Flex,
-  CardBody, Image, CardFooter, Button, Divider,
-  Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, 
+  CardBody, Image, Button, Divider,
+  Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody,
 } from '@chakra-ui/react';
 
 
@@ -32,7 +34,7 @@ function App() {
     };
   }, [intervalId]);
 
-  const generateImage = async () => {
+  const generateImage1 = async () => {
     const newReferenceNumber = generateReferenceNumber();
     setReferenceNumber(newReferenceNumber);
 
@@ -48,7 +50,7 @@ function App() {
       const canvas = await html2canvas(element);
       setCanvasImage(canvas.toDataURL('image/png'));
 
-      // Open modal with screenshot
+
       setIsModalOpen(true);
     } catch (error) {
       console.error('Error generating image:', error);
@@ -57,6 +59,112 @@ function App() {
       setElapsedTime(null);
     }
   };
+
+  const generateImage2 = async () => {
+    const newReferenceNumber = generateReferenceNumber();
+    setReferenceNumber(newReferenceNumber);
+
+    const copyTime = new Date();
+    const intervalId = setInterval(() => {
+      const elapsedMilliseconds = new Date() - copyTime;
+      setElapsedTime(formatElapsedTime(elapsedMilliseconds));
+    }, 1000);
+
+    const element = document.getElementById('receipt1');
+
+    try {
+      const canvas = await html2canvas(element);
+      setCanvasImage(canvas.toDataURL('image/png'));
+
+
+      setIsModalOpen(true);
+    } catch (error) {
+      console.error('Error generating image:', error);
+    } finally {
+      clearInterval(intervalId);
+      setElapsedTime(null);
+    }
+  };
+
+  const generateImage3 = async () => {
+    const newReferenceNumber = generateReferenceNumber();
+    setReferenceNumber(newReferenceNumber);
+
+    const copyTime = new Date();
+    const intervalId = setInterval(() => {
+      const elapsedMilliseconds = new Date() - copyTime;
+      setElapsedTime(formatElapsedTime(elapsedMilliseconds));
+    }, 1000);
+
+    const element = document.getElementById('receipt2');
+
+    try {
+      const canvas = await html2canvas(element);
+      setCanvasImage(canvas.toDataURL('image/png'));
+
+
+      setIsModalOpen(true);
+    } catch (error) {
+      console.error('Error generating image:', error);
+    } finally {
+      clearInterval(intervalId);
+      setElapsedTime(null);
+    }
+  };
+
+  const generateImage4 = async () => {
+    const newReferenceNumber = generateReferenceNumber();
+    setReferenceNumber(newReferenceNumber);
+
+    const copyTime = new Date();
+    const intervalId = setInterval(() => {
+      const elapsedMilliseconds = new Date() - copyTime;
+      setElapsedTime(formatElapsedTime(elapsedMilliseconds));
+    }, 1000);
+
+    const element = document.getElementById('receipt3');
+
+    try {
+      const canvas = await html2canvas(element);
+      setCanvasImage(canvas.toDataURL('image/png'));
+
+
+      setIsModalOpen(true);
+    } catch (error) {
+      console.error('Error generating image:', error);
+    } finally {
+      clearInterval(intervalId);
+      setElapsedTime(null);
+    }
+  };
+
+  const generateImage5 = async () => {
+    const newReferenceNumber = generateReferenceNumber();
+    setReferenceNumber(newReferenceNumber);
+
+    const copyTime = new Date();
+    const intervalId = setInterval(() => {
+      const elapsedMilliseconds = new Date() - copyTime;
+      setElapsedTime(formatElapsedTime(elapsedMilliseconds));
+    }, 1000);
+
+    const element = document.getElementById('receipt4');
+
+    try {
+      const canvas = await html2canvas(element);
+      setCanvasImage(canvas.toDataURL('image/png'));
+
+
+      setIsModalOpen(true);
+    } catch (error) {
+      console.error('Error generating image:', error);
+    } finally {
+      clearInterval(intervalId);
+      setElapsedTime(null);
+    }
+  };
+
+
 
   const formatElapsedTime = (milliseconds) => {
     const seconds = Math.floor((milliseconds / 1000) % 60);
@@ -70,31 +178,7 @@ function App() {
     setIsModalOpen(false);
   };
 
-  const copyImageToClipboard = async () => {
-    try {
-      const imageBlob = await fetch(canvasImage).then((res) => res.blob());
-      const imageFile = new File([imageBlob], 'receipt.png', { type: 'image/png' });
 
-      if (navigator.clipboard && navigator.clipboard.write) {
-        await navigator.clipboard.write([
-          new ClipboardItem({
-            [imageFile.type]: imageFile,
-          }),
-        ]);
-      } else {
-        const tempInput = document.createElement('input');
-        tempInput.value = canvasImage;
-        document.body.appendChild(tempInput);
-        tempInput.select();
-        document.execCommand('copy');
-        document.body.removeChild(tempInput);
-      }
-
-      closeModal();
-    } catch (error) {
-      console.error('Error copying image to clipboard:', error);
-    }
-  };
 
   return (
     <>
@@ -143,21 +227,22 @@ function App() {
 
 
             </Box>
+            <Container maxW='sm'>
+
+              <Box>
+                <Text fontSize={15} mt={5} p={5}>
+                  Time elapsed since copy:
+                </Text>
+              </Box>
+              <Box alignSelf='right'  >
+                <Button variant='outline' bg='#26A9E0' p={5} size={'lg'} w={'100%'} onClick={generateImage1}>Share</Button>
+              </Box>
+
+
+            </Container> 
           </Box>
-          <Container maxW='sm'>
-
-            <Box>
-              <Text fontSize={15} mt={5} p={5}>
-                Time elapsed since copy:
-              </Text>
-            </Box>
-            <Box alignSelf='right'  >
-              <Button variant='outline' bg='#26A9E0' p={5} size={'lg'} w={'100%'} onClick={generateImage}>Share</Button>
-            </Box>
-
-
-          </Container>
-
+          
+        
         </Box>
 
 
@@ -165,7 +250,7 @@ function App() {
         <Box>
 
 
-          <Box maxW='sm' bg='#f2f2f2' p={5}>
+          <Box maxW='sm' id='receipt1' bg='#f2f2f2' p={5}>
 
 
 
@@ -194,20 +279,20 @@ function App() {
                 DBS Bank Ltd
               </Text>
 
+              <Container maxW='sm'>
 
+                <Box>
+                  <Text fontSize={15} mt={5} p={5}>
+                    Time elapsed since copy:
+                  </Text>
+                </Box>
+                <Box alignSelf='right'  >
+                  <Button variant='outline' bg='#26A9E0' size={'lg'} w={'100%'} onClick={generateImage2}>Share</Button>
+                </Box>
+              </Container>
             </Box>
           </Box>
-          <Container maxW='sm'>
-
-            <Box>
-              <Text fontSize={15} mt={5} p={5}>
-                Time elapsed since copy:
-              </Text>
-            </Box>
-            <Box alignSelf='right'  >
-              <Button variant='outline' bg='#26A9E0' size={'lg'} w={'100%'} onClick={generateImage}>Share</Button>
-            </Box>
-          </Container>
+         
         </Box>
 
 
@@ -216,7 +301,7 @@ function App() {
           <Box>
 
 
-            <Box maxW='sm' bg='#f2f2f2' p={5}>
+            <Box maxW='sm' id='receipt2' bg='#f2f2f2' p={5}>
               <Box >
                 <Text fontSize={50} textAlign='center'>💵</Text>
 
@@ -254,27 +339,27 @@ function App() {
                   Advice
                 </Text>
 
+                <Container maxW='sm'>
 
+                  <Box>
+                    <Text fontSize={15} mt={5} p={5}>
+                      Time elapsed since copy:
+                    </Text>
+                  </Box>
+                  <Box alignSelf='right'  >
+                    <Button variant='outline' bg='#26A9E0' size={'lg'} w={'100%'} onClick={generateImage3}>Share</Button>
+                  </Box>
+                </Container>
               </Box>
             </Box>
-            <Container maxW='sm'>
-
-              <Box>
-                <Text fontSize={15} mt={5} p={5}>
-                  Time elapsed since copy:
-                </Text>
-              </Box>
-              <Box alignSelf='right'  >
-                <Button variant='outline' bg='#26A9E0' size={'lg'} w={'100%'} onClick={generateImage}>Share</Button>
-              </Box>
-            </Container>
+            
           </Box>
         </Box>
 
         <Box>
 
 
-          <Box maxW='sm' >
+          <Box maxW='sm' id='receipt3' >
             <Box >
 
 
@@ -334,25 +419,26 @@ function App() {
                 Transaction Successful! To check on status of your transaction, please go to <strong>View Status</strong>
               </Text>
             </Box>
-          </Box>
-          <Container maxW='sm'>
+            <Container maxW='sm'>
 
-            <Box>
-              <Text fontSize={15} mt={5} p={5}>
-                Time elapsed since copy:
-              </Text>
-            </Box>
-            <Box alignSelf='right'  >
-              <Button variant='outline' bg='#26A9E0' size={'lg'} w={'100%'} onClick={generateImage}>Share</Button>
-            </Box>
-          </Container>
+              <Box>
+                <Text fontSize={15} mt={5} p={5}>
+                  Time elapsed since copy:
+                </Text>
+              </Box>
+              <Box alignSelf='right'  >
+                <Button variant='outline' bg='#26A9E0' size={'lg'} w={'100%'} onClick={generateImage4}>Share</Button>
+              </Box>
+            </Container>
+          </Box>
+         
         </Box>
 
 
         <Box>
 
 
-          <Box maxW='sm' bg='#f2f2f2' p={5}>
+          <Box maxW='sm' bg='#f2f2f2' id='receipt4' p={5}>
             <Box >
               <Text fontSize={50} textAlign='center'>💵</Text>
 
@@ -392,18 +478,19 @@ function App() {
 
 
             </Box>
-          </Box>
-          <Container maxW='sm'>
+            <Container maxW='sm'>
 
-            <Box>
-              <Text fontSize={15} mt={5} p={5}>
-                Time elapsed since copy:
-              </Text>
-            </Box>
-            <Box alignSelf='right'  >
-              <Button variant='outline' bg='#26A9E0' size={'lg'} w={'100%'} onClick={generateImage}>Share</Button>
-            </Box>
-          </Container>
+              <Box>
+                <Text fontSize={15} mt={5} p={5}>
+                  Time elapsed since copy:
+                </Text>
+              </Box>
+              <Box alignSelf='right'  >
+                <Button variant='outline' bg='#26A9E0' size={'lg'} w={'100%'} onClick={generateImage5}>Share</Button>
+              </Box>
+            </Container>
+          </Box>
+         
         </Box>
       </Grid>
       <Modal isOpen={isModalOpen} onClose={closeModal}>
@@ -414,7 +501,7 @@ function App() {
           <ModalBody>
             <Image src={canvasImage} alt="Receipt Screenshot" />
             <Flex justifyContent="center" mt={4}>
-              <Button onClick={copyImageToClipboard}>Copy to Clipboard</Button>
+              <Text>Right click to copy</Text>
             </Flex>
           </ModalBody>
         </ModalContent>
@@ -424,5 +511,3 @@ function App() {
 };
 
 export default App
-
-
