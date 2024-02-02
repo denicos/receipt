@@ -75,18 +75,33 @@ const Receipt = ({ receipt, setIsModalOpen }) => {
 
   useEffect(() => {
     setReferenceNumber(generateReferenceNumber());
+    const storedStartTime = sessionStorage.getItem(`copyStartTime_${receipt.id}`);
+
+    if (storedStartTime) {
+      const copyTime = new Date(storedStartTime);
+      const elapsedMilliseconds = new Date() - copyTime;
+      setElapsedTime(formatElapsedTime(elapsedMilliseconds));
+
+      const id = setInterval(() => {
+        const elapsedMilliseconds = new Date() - copyTime;
+        setElapsedTime(formatElapsedTime(elapsedMilliseconds));
+      }, 1000);
+
+      setIntervalId(id);
+    }
+
     return () => {
       clearInterval(intervalId);
     };
-  }, []);
-
-
+  }, [receipt.id]);
 
   const generateImage = async () => {
     const newReferenceNumber = generateReferenceNumber();
     setReferenceNumber(newReferenceNumber);
 
     const copyTime = new Date();
+    sessionStorage.setItem(`copyStartTime_${receipt.id}`, copyTime.toISOString());
+
     const id = setInterval(() => {
       const elapsedMilliseconds = new Date() - copyTime;
       setElapsedTime(formatElapsedTime(elapsedMilliseconds));
@@ -107,9 +122,7 @@ const Receipt = ({ receipt, setIsModalOpen }) => {
     } catch (error) {
       console.error('Error generating image:', error);
     }
-    // Remove the cleanup logic from the finally block
   };
-
 
   const formatElapsedTime = (milliseconds) => {
     const seconds = Math.floor((milliseconds / 1000) % 60);
