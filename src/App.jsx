@@ -75,7 +75,7 @@ const Receipt = ({ receipt, setIsModalOpen }) => {
 
   useEffect(() => {
     setReferenceNumber(generateReferenceNumber());
-    const storedStartTime = sessionStorage.getItem(`copyStartTime_${receipt.id}`);
+    const storedStartTime = localStorage.getItem(`copyStartTime_${receipt.id}`);
 
     if (storedStartTime) {
       const copyTime = new Date(storedStartTime);
@@ -100,7 +100,7 @@ const Receipt = ({ receipt, setIsModalOpen }) => {
     setReferenceNumber(newReferenceNumber);
 
     const copyTime = new Date();
-    sessionStorage.setItem(`copyStartTime_${receipt.id}`, copyTime.toISOString());
+    localStorage.setItem(`copyStartTime_${receipt.id}`, copyTime.toISOString());
 
     const id = setInterval(() => {
       const elapsedMilliseconds = new Date() - copyTime;
@@ -131,6 +131,7 @@ const Receipt = ({ receipt, setIsModalOpen }) => {
 
     return `${hours}h ${minutes}m ${seconds}s`;
   };
+
 
   return (
     <Box key={receipt.id}>
