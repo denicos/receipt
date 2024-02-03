@@ -99,6 +99,9 @@ const Receipt = ({ receipt, setIsModalOpen }) => {
     const newReferenceNumber = generateReferenceNumber();
     setReferenceNumber(newReferenceNumber);
 
+    // Clear stored start time in localStorage
+    localStorage.removeItem(`copyStartTime_${receipt.id}`);
+
     const copyTime = new Date();
     localStorage.setItem(`copyStartTime_${receipt.id}`, copyTime.toISOString());
 
@@ -232,7 +235,7 @@ const Receipt = ({ receipt, setIsModalOpen }) => {
         <Container maxW='sm'>
           <Box>
             <Text fontSize={15} mt={5} p={5}>
-              Time elapsed since copy: {elapsedTime}
+              Copied: {elapsedTime} {" "} ago
             </Text>
           </Box>
           <Box alignSelf='right'>
